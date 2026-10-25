@@ -132,6 +132,19 @@ pub trait Tray: Sized + Send + 'static {
         Default::default()
     }
 
+    /// Text shown next to the icon by hosts that support the Ayatana
+    /// extension (Ubuntu's AppIndicator extension, KDE ignores it).
+    /// Empty means no label.
+    fn label(&self) -> String {
+        Default::default()
+    }
+
+    /// A string as wide as the widest `label` will be, so hosts can reserve
+    /// space and the panel does not jitter as the label changes.
+    fn label_guide(&self) -> String {
+        Default::default()
+    }
+
     /// Describes the status of this item or of the associated application.
     fn status(&self) -> Status {
         Status::Active

@@ -242,6 +242,7 @@ fn status_notifier_item_protocol() {
     sni_property_and_method_assertions(&connection, &service_name, &events);
 
     let new_title = spawn_signal_waiter(&service_name, SNI_PATH, SNI_INTERFACE, "NewTitle");
+    let new_label = spawn_signal_waiter(&service_name, SNI_PATH, SNI_INTERFACE, "XAyatanaNewLabel");
     let new_icon = spawn_signal_waiter(&service_name, SNI_PATH, SNI_INTERFACE, "NewIcon");
     let new_overlay = spawn_signal_waiter(&service_name, SNI_PATH, SNI_INTERFACE, "NewOverlayIcon");
     let new_attention =
@@ -268,6 +269,8 @@ fn status_notifier_item_protocol() {
         .expect("tray should still be alive for updates");
 
     let _: () = message_body(new_title.wait(DEFAULT_TIMEOUT));
+    let (label, guide): (String, String) = message_body(new_label.wait(DEFAULT_TIMEOUT));
+    assert_eq!((label.as_str(), guide.as_str()), ("7%", "100%"));
     let _: () = message_body(new_icon.wait(DEFAULT_TIMEOUT));
     let _: () = message_body(new_overlay.wait(DEFAULT_TIMEOUT));
     let _: () = message_body(new_attention.wait(DEFAULT_TIMEOUT));
@@ -312,6 +315,7 @@ fn status_notifier_item_protocol() {
         proxy.get_property::<String>("Title").unwrap(),
         "Updated Mock Tray"
     );
+    assert_eq!(proxy.get_property::<String>("XAyatanaLabel").unwrap(), "7%");
     assert_eq!(
         proxy.get_property::<String>("Status").unwrap(),
         "NeedsAttention"

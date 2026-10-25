@@ -1,3 +1,8 @@
+# Unreleased
+
+## Added
+- `Tray::label` and `Tray::label_guide`, exposed as the `XAyatanaLabel` and `XAyatanaLabelGuide` properties with the `XAyatanaNewLabel` signal, so hosts that support the Ayatana extension (Ubuntu's AppIndicator GNOME Shell extension) show text beside the icon. Nothing changes if you don't override them
+
 # 0.3.7 (2026-10-20)
 
 ## Added

@@ -357,6 +357,22 @@ impl<T: Tray> StatusNotifierItem<T> {
             .await)
     }
 
+    #[zbus(property, name = "XAyatanaLabel")]
+    async fn x_ayatana_label(&self) -> zbus::fdo::Result<String> {
+        Ok(self
+            .0
+            .lock_state(false, async |state| state.get_label())
+            .await)
+    }
+
+    #[zbus(property, name = "XAyatanaLabelGuide")]
+    async fn x_ayatana_label_guide(&self) -> zbus::fdo::Result<String> {
+        Ok(self
+            .0
+            .lock_state(false, async |state| state.get_label_guide())
+            .await)
+    }
+
     #[zbus(property)]
     async fn tool_tip(&self) -> zbus::fdo::Result<ToolTip> {
         Ok(self
@@ -368,6 +384,13 @@ impl<T: Tray> StatusNotifierItem<T> {
     // signals
     #[zbus(signal)]
     pub async fn new_title(ctxt: &SignalEmitter<'_>) -> zbus::Result<()>;
+
+    #[zbus(signal, name = "XAyatanaNewLabel")]
+    pub async fn x_ayatana_new_label(
+        ctxt: &SignalEmitter<'_>,
+        label: &str,
+        guide: &str,
+    ) -> zbus::Result<()>;
 
     #[zbus(signal)]
     pub async fn new_icon(ctxt: &SignalEmitter<'_>) -> zbus::Result<()>;

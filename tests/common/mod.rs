@@ -127,6 +127,8 @@ pub struct TestTray<const MENU_ON_ACTIVATE: bool> {
     pub id: String,
     pub category: Category,
     pub title: String,
+    pub label: String,
+    pub label_guide: String,
     pub status: Status,
     pub window_id: i32,
     pub icon_theme_path: String,
@@ -166,6 +168,8 @@ impl<const MENU_ON_ACTIVATE: bool> TestTray<MENU_ON_ACTIVATE> {
                 id: id.to_string(),
                 category: Category::Hardware,
                 title: "Mock Tray".into(),
+                label: "42%".into(),
+                label_guide: "100%".into(),
                 status: Status::Active,
                 window_id: 7,
                 icon_theme_path: "/tmp/mock-icons".into(),
@@ -241,6 +245,14 @@ impl<const MENU_ON_ACTIVATE: bool> ksni::Tray for TestTray<MENU_ON_ACTIVATE> {
 
     fn title(&self) -> String {
         self.title.clone()
+    }
+
+    fn label(&self) -> String {
+        self.label.clone()
+    }
+
+    fn label_guide(&self) -> String {
+        self.label_guide.clone()
     }
 
     fn status(&self) -> Status {
@@ -583,6 +595,7 @@ where
 pub fn mutate_sni_properties(tray: &mut TestTray<false>) {
     tray.category = Category::Communications;
     tray.title = "Updated Mock Tray".into();
+    tray.label = "7%".into();
     tray.status = Status::NeedsAttention;
     tray.window_id = 42;
     tray.icon_theme_path = "/tmp/mock-icons-updated".into();
@@ -625,6 +638,9 @@ pub fn sni_property_and_method_assertions(
     let category: String = proxy.get_property("Category").unwrap();
     let id: String = proxy.get_property("Id").unwrap();
     let title: String = proxy.get_property("Title").unwrap();
+    let label: String = proxy.get_property("XAyatanaLabel").unwrap();
+    let label_guide: String = proxy.get_property("XAyatanaLabelGuide").unwrap();
+    assert_eq!((label.as_str(), label_guide.as_str()), ("42%", "100%"));
     let status: String = proxy.get_property("Status").unwrap();
     let window_id: i32 = proxy.get_property("WindowId").unwrap();
     let icon_theme_path: String = proxy.get_property("IconThemePath").unwrap();

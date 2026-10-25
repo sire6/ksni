@@ -288,6 +288,11 @@ impl<T: Tray> State<T> {
         if self.title_changed() {
             StatusNotifierItem::<T>::new_title(sni_obj.signal_emitter()).await?;
         }
+        if self.label_changed() | self.label_guide_changed() {
+            let (label, guide) = (self.get_label(), self.get_label_guide());
+            StatusNotifierItem::<T>::x_ayatana_new_label(sni_obj.signal_emitter(), &label, &guide)
+                .await?;
+        }
         if self.icon_name_changed() || self.icon_pixmap_changed() {
             StatusNotifierItem::<T>::new_icon(sni_obj.signal_emitter()).await?;
         }
@@ -635,6 +640,8 @@ macro_rules! def_properties_monitor {
 def_properties_monitor! {
     category: crate::Category,
     title: String,
+    label: String,
+    label_guide: String,
     status: crate::Status,
     window_id: i32,
     icon_theme_path: String,
